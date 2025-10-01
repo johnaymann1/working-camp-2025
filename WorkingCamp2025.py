@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import gspread
-from google.oauth2.service_account import Credentials
+import json
+import streamlit as st
+from google.oauth2 import service_account
 import time
 import base64
 import re
@@ -95,12 +97,23 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # ═══════════════════════════════════════════════════════════════════════════════
 @st.cache_resource
 def get_google_client():
+    """Create a gspread client using service account info stored in st.secrets.
+
+    The secrets should include GOOGLE_SERVICE_ACCOUNT_JSON (the full JSON blob)
+    and GOOGLE_SHEET_ID. This avoids keeping service_account.json on disk.
+    """
     try:
-        credentials = Credentials.from_service_account_file(
-            "service_account.json", 
-            scopes=["https://www.googleapis.com/auth/spreadsheets"]
-        )
-        return gspread.authorize(credentials)
+        sa_json = st.secrets.get("GOOGLE_SERVICE_ACCOUNT_JSON")
+        if not sa_json:
+            raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON in st.secrets")
+
+        service_account_info = json.loads(sa_json)
+        scopes = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive",
+        ]
+        creds = service_account.Credentials.from_service_account_info(service_account_info, scopes=scopes)
+        return gspread.authorize(creds)
     except Exception as e:
         st.error(f"Failed to connect to Google Sheets: {str(e)}")
         return None
@@ -120,8 +133,14 @@ def get_data(nonce: int | None = None):  # nonce param forces refetch when desir
         if not gc:
             return pd.DataFrame()
             
-        spreadsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/14O3sMUgyjrBeGVZA8WIPCkDuUdOjWdCfLv5bm5eBe1E/edit?gid=0#gid=0")
-        sheet = spreadsheet.worksheet("Counts")
+        # Read sheet id and worksheet name from secrets so we don't store credentials on disk
+        sheet_id = st.secrets.get("GOOGLE_SHEET_ID")
+        sheet_name = st.secrets.get("SHEET_NAME", "Counts")
+        if not sheet_id:
+            raise RuntimeError("Missing GOOGLE_SHEET_ID in st.secrets")
+
+        spreadsheet = gc.open_by_key(sheet_id)
+        sheet = spreadsheet.worksheet(sheet_name)
         
         data = sheet.get_all_records()
         df = pd.DataFrame(data)
