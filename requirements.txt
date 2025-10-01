@@ -1,0 +1,22 @@
+# Working Camp 2025 Dashboard Requirements
+# Core web framework
+streamlit==1.50.0
+
+# Auto-refresh functionality
+streamlit-autorefresh==1.0.1
+
+# Data manipulation
+pandas==2.3.3
+numpy==2.3.3
+
+# Google Sheets integration
+gspread==6.2.1
+google-auth==2.41.0
+google-auth-oauthlib==1.2.2
+
+# Additional dependencies
+requests==2.32.5
+pillow==11.3.0
+
+# Optional: For enhanced functionality
+pyarrow==21.0.0
