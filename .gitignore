@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+
+# Service account key
+service_account.json
+
+# Streamlit and other local files
+.env
+.env.*
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Editor directories and files
+.vscode/
+.idea/
+
+# Python package build
+dist/
+build/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Misc
+*.swp
