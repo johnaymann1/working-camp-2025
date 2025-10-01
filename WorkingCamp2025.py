@@ -255,9 +255,11 @@ num_rows = len(row_distribution)
 
 HEADER_PX = 120  # Increased header space for bigger elements
 ROW_GAP_PX = 20   # Increased spacing between rows
-CARD_GAP_PX = 18  # Increased spacing between cards  
-FUDGE_PX = 50     # Increased bottom margin
-row_height_css = f"calc((100vh - {HEADER_PX + FUDGE_PX}px - {(num_rows - 1) * ROW_GAP_PX}px) / {num_rows})"
+CARD_GAP_PX = 18  # Increased spacing between cards
+FUDGE_PX = 50     # general bottom fudge used previously
+BOTTOM_SPACE_PX = 60  # extra visible spacing from bottom of viewport
+# Reserve BOTTOM_SPACE_PX in the height calculation so rows don't stretch to very bottom
+row_height_css = f"calc((100vh - {HEADER_PX + FUDGE_PX + BOTTOM_SPACE_PX}px - {(num_rows - 1) * ROW_GAP_PX}px) / {num_rows})"
 
 # Build HTML grid manually for precise control with bigger, centered design
 cards_html_parts = [
