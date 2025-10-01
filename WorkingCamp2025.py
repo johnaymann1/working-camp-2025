@@ -47,7 +47,7 @@ hide_streamlit_style = """
     overflow:hidden;
 }
 
-.block-container {padding:1rem 2rem 60px 2rem; height:calc(100vh - 60px); overflow:hidden; max-width:none;}
+.block-container {padding:1rem 2rem 50px 2rem; height:calc(100vh - 60px); overflow:hidden; max-width:none;}
 
 .dashboard-header {
     background: rgba(255,255,255,0.1);
