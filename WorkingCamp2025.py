@@ -41,13 +41,13 @@ hide_streamlit_style = """
 #MainMenu, footer, header, .stDeployButton, .stToolbar {visibility: hidden; display:none;}
 
 .main {
-    padding-top:0; 
-    background: linear-gradient(135deg,#1e3c72 0%,#2a5298 100%); 
-    height:100vh; 
+    padding-top:0;
+    background: #000; /* solid black background */
+    height:100vh;
     overflow:hidden;
 }
 
-.block-container {padding:1rem 2rem 0 2rem; height:100vh; overflow:hidden; max-width:none;}
+.block-container {padding:1rem 2rem 50px 2rem; height:calc(100vh - 60px); overflow:hidden; max-width:none;}
 
 .dashboard-header {
     background: rgba(255,255,255,0.1);
@@ -255,14 +255,16 @@ num_rows = len(row_distribution)
 
 HEADER_PX = 120  # Increased header space for bigger elements
 ROW_GAP_PX = 20   # Increased spacing between rows
-CARD_GAP_PX = 18  # Increased spacing between cards  
-FUDGE_PX = 50     # Increased bottom margin
-row_height_css = f"calc((100vh - {HEADER_PX + FUDGE_PX}px - {(num_rows - 1) * ROW_GAP_PX}px) / {num_rows})"
+CARD_GAP_PX = 18  # Increased spacing between cards
+FUDGE_PX = 50     # general bottom fudge used previously
+BOTTOM_SPACE_PX = 60  # extra visible spacing from bottom of viewport
+# Reserve BOTTOM_SPACE_PX in the height calculation so rows don't stretch to very bottom
+row_height_css = f"calc((100vh - {HEADER_PX + FUDGE_PX + BOTTOM_SPACE_PX}px - {(num_rows - 1) * ROW_GAP_PX}px) / {num_rows})"
 
 # Build HTML grid manually for precise control with bigger, centered design
 cards_html_parts = [
     "<style>\n"
-    " .wc-rows {display:flex;flex-direction:column;gap:%dpx;height:calc(100vh - %dpx);}" % (ROW_GAP_PX, HEADER_PX + FUDGE_PX),
+    " .wc-rows {display:flex;flex-direction:column;gap:%dpx;height:calc(100vh - %dpx);padding-bottom:20px;}" % (ROW_GAP_PX, HEADER_PX + FUDGE_PX + BOTTOM_SPACE_PX),
     " .wc-row {display:flex;justify-content:center;gap:%dpx;height:%s;padding:0 6px;}" % (CARD_GAP_PX, row_height_css),
     " .wc-card {"
     "   background: rgba(255,255,255,0.94);"
